@@ -1,0 +1,81 @@
+@use "variables";
+@use "mixins";
+
+// 页面容器
+.container {
+  max-width: variables.$width-container;
+  margin: auto;
+  padding: 2rem;
+
+  @media (max-width: 672px) {
+    padding: 1rem;
+  }
+}
+
+// 标签栏
+.tab {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  cursor: pointer;
+
+  &.active {
+    text-decoration-line: underline;
+    color: #93c5fd;
+  }
+}
+
+//  grid布局
+.grid-display {
+  display: grid;
+  margin-top: variables.$margin-top;
+  gap: variables.$gap;
+
+  @media (min-width: 768px) {
+    @include mixins.grid-columns(2);
+  }
+}
+
+// grid内容块
+.grid-content {
+  border-radius: variables.$border-radius;
+  border: 1px solid variables.$border-color;
+  box-shadow: variables.$shadow-none !important;
+  cursor: pointer;
+
+  &:hover {
+    background-color: variables.$background-hover;
+  }
+}
+
+// grid内容图片尺寸
+.content-img {
+  width: 3rem;
+  height: 3rem;
+}
+
+// 文章容器
+.article-container {
+  margin-top: variables.$margin-top;
+  background-color: #ffffff;
+  border: 1px solid variables.$border-color;
+}
+
+// 文章列表
+.article-item {
+  border-bottom: 1px solid variables.$border-color;
+  padding: 1rem;
+  height: fit-content;
+  cursor: pointer;
+  &:hover {
+    background-color: variables.$background-hover;
+  }
+}
+
+// 文字超出隐藏
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
