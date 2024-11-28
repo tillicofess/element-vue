@@ -1,5 +1,27 @@
 <script setup lang="ts">
-import Avatar from "../popover/Avatar.vue";
+import { ref, onBeforeMount, onMounted } from "vue";
+import { useUserStore } from "@/stores/userStore";
+import { Newspaper, School, SquareScissors, Database } from "lucide-vue-next";
+
+import Avatar from "@/components/popover/Avatar.vue";
+
+const isMobile = ref(false); // 标记是否是移动设备
+
+// 检测设备类型
+const checkDevice = () => {
+  const userAgent = navigator.userAgent.toLowerCase();
+  isMobile.value =
+    /android|iphone|ipad|ipod|blackberry|windows phone|webos/i.test(userAgent);
+};
+
+const userStore = useUserStore();
+onBeforeMount(async () => {
+  await userStore.fetchUser(); // 确保这个调用是异步处理的
+});
+
+onMounted(() => {
+  checkDevice();
+});
 </script>
 
 <template>
@@ -9,35 +31,33 @@ import Avatar from "../popover/Avatar.vue";
         <!-- logo -->
         <router-link to="/">
           <el-button size="default" text>
-            <span class="header-text">首页</span>
+            <Newspaper />
           </el-button>
         </router-link>
 
         <!-- navigation -->
-        <router-link to="/creative-center/home">
+        <router-link to="/tutorials">
           <el-button size="default" text>
-            <span class="header-text">创作中心</span>
+            <School />
           </el-button>
         </router-link>
 
         <!-- recommend table -->
-        <router-link to="/apptable">
+        <router-link to="/tools">
           <el-button size="default" text>
-            <span class="header-text">推荐表格</span>
+            <SquareScissors />
+          </el-button>
+        </router-link>
+
+        <!-- 后台管理 -->
+        <router-link v-if="!isMobile" to="/creative-center">
+          <el-button size="default" text>
+            <Database />
           </el-button>
         </router-link>
 
         <!-- personal center -->
-        <router-link to="/settings">
-          <el-button size="default" text>
-            <span class="header-text">个人中心</span>
-          </el-button>
-        </router-link>
-      </div>
-
-      <!-- avatar -->
-      <div class="content">
-        <Avatar/>
+        <Avatar />
       </div>
     </div>
   </div>
@@ -83,6 +103,6 @@ import Avatar from "../popover/Avatar.vue";
 
 .my-shadow {
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3),
-  -4px -4px 8px rgba(255, 255, 255, 0.7) !important;
+    -4px -4px 8px rgba(255, 255, 255, 0.7) !important;
 }
 </style>

@@ -1,21 +1,21 @@
-import {ElNotification} from "element-plus";
+import { ElNotification } from "element-plus";
 
 interface NotificationOptions {
-    title?: string;
-    message: string;
-    type?: string;
+  title?: string;
+  message: string;
+  type?: string;
 }
 
 const notify = ({
-                    message,
-                    type = "success",
-                    title = "Notification",
-                }: NotificationOptions): void => {
-    ElNotification({
-        title,
-        message,
-        type,
-    } as any);
+  message,
+  type = "success",
+  title = "Notification",
+}: NotificationOptions): void => {
+  ElNotification({
+    title,
+    message,
+    type,
+  } as any);
 };
 
 /**
@@ -23,7 +23,7 @@ const notify = ({
  * @param message - 要显示的字符串消息
  */
 export const openSuccess = (message: string): void => {
-    notify({message, type: "success", title: "Success"});
+  notify({ message, type: "success", title: "Success" });
 };
 
 /**
@@ -31,5 +31,5 @@ export const openSuccess = (message: string): void => {
  * @param message - 要显示的字符串消息
  */
 export const openWarning = (message: string): void => {
-    notify({message, type: "warning", title: "Warning"});
+  notify({ message, type: "warning", title: "Warning" });
 };

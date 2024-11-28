@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import Header from "@/components/header/Header.vue";
-import {ref, onMounted, reactive} from "vue";
-import {ElTable} from "element-plus";
+import { ref, onMounted, reactive } from "vue";
+import { ElTable } from "element-plus";
 import axios from "axios";
-import {openSuccess, openWarning} from "@/utils/notificationUtils.ts";
+import { openSuccess, openWarning } from "@/utils/notificationUtils.ts";
 
 // 定义表单数据类型
 interface Card {
@@ -38,7 +37,7 @@ let form = reactive<Card>({
 //  表格分页状态
 const state = reactive({
   page: 1,
-  limit: 14,
+  limit: 20,
   total: 0,
 });
 
@@ -86,23 +85,23 @@ const handleCurrentChange = (e: number) => {
 
 //获取table数据
 async function getData(
-    page: number = 1,
-    limit: number = 14
+  page: number = 1,
+  limit: number = 14
 ): Promise<{ results: Card[]; total: number }> {
   try {
     const response = await axios.get<{ results: Card[]; total: number }>(
-        "http://49.235.164.72:3000/payments",
-        {
-          params: {
-            page: page,
-            limit: limit,
-          },
-        }
+      "http://49.235.164.72:3000/payments",
+      {
+        params: {
+          page: page,
+          limit: limit,
+        },
+      }
     );
     return response.data;
   } catch (error) {
     console.error("Error fetching data:", error);
-    return {results: [], total: 0}; // 返回一个空数组和总条目数为0
+    return { results: [], total: 0 }; // 返回一个空数组和总条目数为0
   }
 }
 
@@ -135,12 +134,15 @@ const handleAddConfirm = async () => {
       // 如果图片img_url为空，则使用默认图片
       if (form.img_url === "") {
         form.img_url =
-            "https://cofess-1326804753.cos.ap-shanghai.myqcloud.com/cat.jpg";
+          "https://cofess-1326804753.cos.ap-shanghai.myqcloud.com/cat.jpg";
       }
       console.log(form.img_url);
       console.log(form);
       // 发送axios请求
-      const response = await axios.post("http://49.235.164.72:3000/insert", form);
+      const response = await axios.post(
+        "http://49.235.164.72:3000/insert",
+        form
+      );
       console.log(response);
       dialogAddVisible.value = false;
       loadData();
@@ -157,7 +159,10 @@ const handleAddConfirm = async () => {
 const handleEditConfirm = async () => {
   if (form.title && form.description && form.url && form.img_url) {
     try {
-      const response = await axios.put("http://49.235.164.72:3000/update", form);
+      const response = await axios.put(
+        "http://49.235.164.72:3000/update",
+        form
+      );
       console.log(response.data);
       dialogEditVisible.value = false;
       loadData();
@@ -175,7 +180,7 @@ const handleDeleteConfirm = async (id: number | undefined) => {
   if (id) {
     try {
       await axios.delete("http://49.235.164.72:3000/deleteRows", {
-        data: {id: id},
+        data: { id: id },
       });
       dialogDeleteVisible.value = false;
       console.log("删除成功");
@@ -220,117 +225,99 @@ const handleCancel = (param: keyof typeof dialogMapping) => {
 
 <template>
   <div class="container">
-    <Header/>
-    <div style="padding: 1rem; flex: 1">
-      <div
-          style="
-          padding: 1rem;
-          background: white;
-          max-width: 1440px;
-          margin-left: auto;
-          margin-right: auto;
-          border: 1px solid #e2e8f0;
-          box-sizing: border-box;
-        "
-      >
-        <!-- 新增按钮 -->
-        <el-button
-            type="primary"
-            @click="dialogAddVisible = true"
-            style="margin-bottom: 1rem"
+    <!-- 新增按钮 -->
+    <div>
+      <el-button
+        type="primary"
+        @click="dialogAddVisible = true"
+        style="margin-bottom: 1rem"
         >新增
-        </el-button
-        >
-
-        <!-- Table -->
-        <el-table
-            :data="tableData"
-            stripe
-            border
-            style="border: 1px solid #e2e8f0; margin-bottom: 1rem"
-        >
-          <el-table-column prop="id" label="Id" width="100"/>
-          <el-table-column
-              prop="category"
-              label="Category"
-              width="100"
-              :filters="[
-              { text: 'tutorial', value: 'tutorial' },
-              { text: '	tools', value: 'tools' },
-            ]"
-              :filter-method="filterTag"
-          >
-            <template #default="scope">
-              <el-tag
-                  :type="
-                  scope.row.category === 'tutorial' ? 'primary' : 'success'
-                "
-                  disable-transitions
-              >{{ scope.row.category }}
-              </el-tag
-              >
-            </template>
-          </el-table-column
-          >
-          <el-table-column
-              prop="img_url"
-              label="Img_url"
-              show-overflow-tooltip
-          />
-          <el-table-column prop="title" label="Title" width="200"/>
-          <el-table-column prop="description" label="Description"/>
-          <el-table-column prop="url" label="Url" show-overflow-tooltip/>
-          <el-table-column label="Operations" width="160">
-            <template #default="scope">
-              <div>
-                <el-button
-                    size="small"
-                    @click="handleEdit(scope.$index, scope.row)"
-                >
-                  Edit
-                </el-button>
-                <el-button
-                    size="small"
-                    type="danger"
-                    @click="handleDelete(scope.$index, scope.row)"
-                >
-                  Delete
-                </el-button>
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <!-- 分页 -->
-        <el-pagination
-            background
-            :page-size="state.limit"
-            layout="total,prev, pager, next"
-            :total="state.total"
-            style="justify-content: end"
-            @current-change="handleCurrentChange"
-        />
-      </div>
+      </el-button>
     </div>
+
+    <!-- Table -->
+    <el-table
+      :data="tableData"
+      stripe
+      style="
+        border: 1px solid #e2e8f0;
+        margin-bottom: 1rem;
+        overflow-y: scroll;
+        flex-grow: 1;
+      "
+    >
+      <el-table-column prop="id" label="Id" width="100" />
+      <el-table-column
+        prop="category"
+        label="Category"
+        width="100"
+        :filters="[
+          { text: 'tutorial', value: 'tutorial' },
+          { text: '	tools', value: 'tools' },
+        ]"
+        :filter-method="filterTag"
+      >
+        <template #default="scope">
+          <el-tag
+            :type="scope.row.category === 'tutorial' ? 'primary' : 'success'"
+            disable-transitions
+            >{{ scope.row.category }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="img_url" label="Img_url" show-overflow-tooltip />
+      <el-table-column prop="title" label="Title" width="200" />
+      <el-table-column prop="description" label="Description" />
+      <el-table-column prop="url" label="Url" show-overflow-tooltip />
+      <el-table-column label="Operations" width="160">
+        <template #default="scope">
+          <div>
+            <el-button
+              size="small"
+              @click="handleEdit(scope.$index, scope.row)"
+            >
+              Edit
+            </el-button>
+            <el-button
+              size="small"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+            >
+              Delete
+            </el-button>
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!-- 分页 -->
+    <el-pagination
+      background
+      :page-size="state.limit"
+      layout="total,prev, pager, next"
+      :total="state.total"
+      style="justify-content: end"
+      @current-change="handleCurrentChange"
+    />
 
     <!-- 删除确认弹窗 -->
     <el-dialog
-        v-model="dialogDeleteVisible"
-        title="Tips"
-        width="500"
-        :show-close="false"
+      v-model="dialogDeleteVisible"
+      title="Tips"
+      width="500"
+      :show-close="false"
     >
       <span id="confirm-delete-text">
         请输入"<span class="highlight-text">确认删除</span>"来确定删除此条数据！
       </span>
-      <el-input v-model="confirmDelete" placeholder="请输入确认删除"/>
+      <el-input v-model="confirmDelete" placeholder="请输入确认删除" />
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="handleCancel('delete')">取消</el-button>
           <el-button
-              type="primary"
-              :disabled="confirmDelete !== '确认删除'"
-              @click="handleDeleteConfirm(deleteRow)"
+            type="primary"
+            :disabled="confirmDelete !== '确认删除'"
+            @click="handleDeleteConfirm(deleteRow)"
           >
             确定
           </el-button>
@@ -340,34 +327,34 @@ const handleCancel = (param: keyof typeof dialogMapping) => {
 
     <!-- 新增弹窗 -->
     <el-dialog
-        v-model="dialogAddVisible"
-        title="New"
-        width="500"
-        :show-close="false"
+      v-model="dialogAddVisible"
+      title="New"
+      width="500"
+      :show-close="false"
     >
       <el-form :model="form" label-width="auto">
         <!-- Category -->
         <el-form-item label="类型">
           <el-select
-              v-model="form.category"
-              placeholder="please select your zone"
+            v-model="form.category"
+            placeholder="please select your zone"
           >
-            <el-option label="tutorial" value="tutorial"/>
-            <el-option label="tools" value="tools"/>
+            <el-option label="tutorial" value="tutorial" />
+            <el-option label="tools" value="tools" />
           </el-select>
         </el-form-item>
         <!-- img_url -->
         <el-form-item label="图片url">
-          <el-input v-model="form.img_url"/>
+          <el-input v-model="form.img_url" />
         </el-form-item>
         <el-form-item label="标题">
-          <el-input v-model="form.title"/>
+          <el-input v-model="form.title" />
         </el-form-item>
         <el-form-item label="描述词">
-          <el-input v-model="form.description"/>
+          <el-input v-model="form.description" />
         </el-form-item>
         <el-form-item label="网站地址">
-          <el-input v-model="form.url"/>
+          <el-input v-model="form.url" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -382,34 +369,34 @@ const handleCancel = (param: keyof typeof dialogMapping) => {
 
     <!-- 编辑弹窗 -->
     <el-dialog
-        v-model="dialogEditVisible"
-        title="New"
-        width="500"
-        :show-close="false"
+      v-model="dialogEditVisible"
+      title="New"
+      width="500"
+      :show-close="false"
     >
       <el-form :model="form" label-width="auto">
         <!-- Category -->
         <el-form-item label="类型">
           <el-select
-              v-model="form.category"
-              placeholder="please select your zone"
+            v-model="form.category"
+            placeholder="please select your zone"
           >
-            <el-option label="tutorial" value="tutorial"/>
-            <el-option label="tools" value="tools"/>
+            <el-option label="tutorial" value="tutorial" />
+            <el-option label="tools" value="tools" />
           </el-select>
         </el-form-item>
         <!-- img_url -->
         <el-form-item label="图片url">
-          <el-input v-model="form.img_url"/>
+          <el-input v-model="form.img_url" />
         </el-form-item>
         <el-form-item label="标题">
-          <el-input v-model="form.title"/>
+          <el-input v-model="form.title" />
         </el-form-item>
         <el-form-item label="描述词">
-          <el-input v-model="form.description"/>
+          <el-input v-model="form.description" />
         </el-form-item>
         <el-form-item label="网站地址">
-          <el-input v-model="form.url"/>
+          <el-input v-model="form.url" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -426,8 +413,13 @@ const handleCancel = (param: keyof typeof dialogMapping) => {
 
 <style scoped>
 .container {
+  max-height: 840px;
+  padding: 1rem 1.5rem;
+  background-color: #ffffff;
+  margin-bottom: 1rem;
+  border: 1px solid #e2e8f0;
+  box-sizing: border-box;
   display: flex;
-  height: 100vh;
   flex-direction: column;
 }
 

@@ -1,15 +1,14 @@
 // useUserData.ts
-import {reactive} from 'vue';
+import { reactive } from "vue";
 
 /**
  * 用户登录/注册数据
- * @returns {email: string, password: string}
  */
-export const useUserData = (): { email: string, password: string } => {
-    return reactive({
-        email: "",
-        password: "",
-    });
+export const useUserData = (): { email: string; password: string } => {
+  return reactive({
+    email: "",
+    password: "",
+  });
 };
 
 /**
@@ -22,11 +21,12 @@ export const useUserData = (): { email: string, password: string } => {
  * @property {string} [updated_at] - 最后更新时间
  */
 export interface Card {
-    id: number;
-    title: string;
-    name: string;
-    created_at: string;
-    updated_at?: string;
+  id: number;
+  title: string;
+  name: string;
+  created_at: string;
+  updated_at?: string;
+  imageUrl?: string;
 }
 
 /**
@@ -38,7 +38,7 @@ export interface Card {
  * @property {string} avatar_url - 作者头像的 URL 地址
  */
 export interface Card_detail extends Card {
-    email: string;
-    content: string;
-    avatar_url: string;
+  email: string;
+  content: string;
+  avatar_url: string;
 }

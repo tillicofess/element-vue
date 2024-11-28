@@ -252,7 +252,7 @@ const uploadImage = async (event: Event) => {
 
 <style scoped lang="scss">
 .container {
-  max-width: 800px;
+  max-width: 672px;
   margin: 0 auto;
   padding: 1rem;
 }

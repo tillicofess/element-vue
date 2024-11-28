@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import Header from "@/components/header/Header.vue";
+import MyHeader from "@/components/header/Header.vue";
 import CreativeMenu from "@/components/menu/CreativeMenu.vue";
 </script>
 
 <template>
-  <div style="overflow-x: auto; height: 100vh">
-    <Header/>
+  <div>
+    <MyHeader />
     <div
-        style="
-        min-width: 768px;
-        max-width: 1140px;
+      style="
+        width: 1600px;
         margin-left: auto;
         margin-right: auto;
       "
     >
       <div
-          style="
+        style="
           background-color: #ffffff;
           width: 12rem;
           position: fixed;
@@ -25,7 +24,7 @@ import CreativeMenu from "@/components/menu/CreativeMenu.vue";
           border: 1px solid #e2e8f0;
         "
       >
-        <CreativeMenu/>
+        <CreativeMenu />
       </div>
       <div style="margin-left: 13rem; margin-top: 1rem">
         <router-view></router-view>

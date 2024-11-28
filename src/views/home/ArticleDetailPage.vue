@@ -5,10 +5,12 @@ import { Card_detail } from "@/type/types.ts";
 import { fetchArticleData, fetchArticleNum } from "@/api/articles.ts";
 import { useEditorSetup } from "@/hooks/useEditorSetup.ts";
 import { EditorContent } from "@tiptap/vue-3";
+import MyHeader from "@/components/header/Header.vue";
 
-const editor = useEditorSetup('', false);
+const editor = useEditorSetup("", false);
 const route = useRoute();
 const loading = ref(true);
+const errorMsg = ref<boolean>(false);
 const article = ref<Card_detail | null>(null);
 const articleNum = ref<number>(0); // 文章数量
 
@@ -31,49 +33,34 @@ onBeforeUnmount(() => {
 const defineData = async () => {
   const id = String(route.params.id);
   article.value = await fetchArticleData(id);
+  if (!article.value) {
+    errorMsg.value = true;
+    return;
+  }
   article.value.avatar_url = `https://${article.value.avatar_url}`;
   articleNum.value = await fetchArticleNum(article.value.email);
 };
 </script>
 
 <template>
-  <Header />
+  <MyHeader />
   <div class="container">
     <!-- 文章主体 -->
-    <el-skeleton v-if="loading" :rows="2" style="padding: 1rem 0" animated />
+    <el-empty v-if="errorMsg">当前文章不存在或已删除</el-empty>
+    <el-skeleton
+      v-else-if="loading"
+      :rows="2"
+      style="padding: 1rem 0"
+      animated
+    />
     <div v-else>
       <h1>{{ article?.title }}</h1>
       <div class="article-author">
-        <img :src="article?.avatar_url" class="img-avatar">
-        <p>
-          {{ article?.name }} | {{ article?.created_at }}
-        </p>
+        <img :src="article?.avatar_url" class="img-avatar" />
+        <p>{{ article?.name }} | {{ article?.created_at }}</p>
       </div>
       <EditorContent :editor="editor"></EditorContent>
     </div>
-
-    <!-- 侧边栏 -->
-    <!-- <div class="article article-aside">
-      <div style="display: flex; justify-content: space-between">
-        <div
-            style="
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-          "
-        >
-          <p style="font-size: 1.2rem">
-            {{ article?.name }}
-          </p>
-          <p>文章：{{ articleNum }}</p>
-        </div>
-        <img
-            :src="article?.avatar_url"
-            alt="avatar"
-            style="width: 3.5rem; height: 3.5rem; border-radius: 50%"
-        />
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -102,6 +89,6 @@ const defineData = async () => {
 .img-avatar {
   width: 3.5rem;
   height: 3.5rem;
-  border-radius: 50%
+  border-radius: 50%;
 }
 </style>

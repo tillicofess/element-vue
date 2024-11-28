@@ -27,10 +27,9 @@
 //  grid布局
 .grid-display {
   display: grid;
-  margin-top: variables.$margin-top;
   gap: variables.$gap;
 
-  @media (min-width: 768px) {
+  @media (min-width: 672px) {
     @include mixins.grid-columns(2);
   }
 }
